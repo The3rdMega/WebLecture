@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Chat Web</title>
+</head>
+<body>
+  <h2>Chat Web</h2>
+  <div id="chat"></div>
+  
+  <div id="inputArea">
+  <input type="text" id="message" placeholder="Digite sua mensagem..." />
+  <button onclick="sendMessage()">Enviar</button>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+
+    let nickname = prompt("Escolha um nome de exibição:");
+    socket.emit('set_nickname', nickname);
+
+    const chat = document.getElementById('chat');
+
+    socket.on('connect', () => {
+      console.log('Conectado ao servidor');
+    });
+
+    socket.on('message', msg => {
+      const div = document.createElement('div');
+      div.classList.add('message');
+
+      if (msg.startsWith(nickname + ":")) {
+        div.classList.add('you');
+      } else {
+        div.classList.add('other');
+      }
+
+      div.textContent = msg;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    });
+
+    function sendMessage() {
+      const input = document.getElementById('message');
+      const message = input.value;
+      if (message.trim()) {
+        socket.emit('chat_message', { nickname, message });
+        input.value = '';
+      }
+    }
+
+    document.getElementById('message').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script>
+</body>
+</html>

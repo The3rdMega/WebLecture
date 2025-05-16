@@ -1,0 +1,124 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f5f5;
+  overflow: hidden; /* Impede scroll da página inteira */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho fixo */
+h2 {
+  background-color: #4a76a8;
+  color: white;
+  padding: 16px;
+  text-align: center;
+  font-size: 1.5rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* Área de mensagens rolável */
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #e9ebee;
+  margin-top: 60px; /* espaço do header */
+  margin-bottom: 70px; /* espaço do input */
+}
+
+/* Mensagens */
+.message {
+  max-width: 80%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.you {
+  align-self: flex-end;
+  background-color: #dcf8c6;
+}
+
+.other {
+  align-self: flex-start;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+}
+
+/* Área de input fixa no rodapé */
+#inputArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ccc;
+  z-index: 10;
+}
+
+#message {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4a76a8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #3b5e8a;
+}
+
+/* Responsivo para telas menores */
+@media (max-width: 600px) {
+  .message {
+    font-size: 15px;
+    max-width: 90%;
+  }
+
+  #message, button {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    padding: 12px;
+  }
+
+  button {
+    width: auto;
+  }
+}
