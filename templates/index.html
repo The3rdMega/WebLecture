@@ -8,6 +8,18 @@
 </head>
 <body>
   <h2>Chat Web</h2>
+  
+  <!-- Quadro Branco -->
+  <div id="whiteboardContainer">
+    <canvas id="whiteboard"></canvas>
+    <div id="tools">
+      <button onclick="setTool('draw')">Desenhar</button>
+      <button onclick="setTool('erase')">Apagar</button>
+      <!--<button onclick="clearBoard()">Limpar Tudo</button>-->
+    </div>
+  </div>
+
+
   <div id="chat"></div>
   
   <div id="inputArea">
@@ -18,6 +30,8 @@
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
     const socket = io();
+
+    socket.emit('request_history');
 
     let nickname = prompt("Escolha um nome de exibição:");
     socket.emit('set_nickname', nickname);
@@ -55,6 +69,66 @@
     document.getElementById('message').addEventListener('keypress', function (e) {
       if (e.key === 'Enter') sendMessage();
     });
+
+    // Whiteboard
+    const canvas = document.getElementById('whiteboard');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let tool = 'draw';
+    let lastPos = null;
+
+    function resizeCanvas() {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      ctx.putImageData(imageData, 0, 0);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    canvas.addEventListener('mousedown', e => {
+      drawing = true;
+      lastPos = [e.offsetX, e.offsetY];
+    });
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+      lastPos = null;
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!drawing) return;
+      const currentPos = [e.offsetX, e.offsetY];
+      drawLine(lastPos, currentPos, tool === 'erase');
+      socket.emit('draw', { from: lastPos, to: currentPos, erase: tool === 'erase' });
+      lastPos = currentPos;
+    });
+
+    function drawLine(from, to, erase = false) {
+      ctx.strokeStyle = erase ? 'white' : 'black';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(...from);
+      ctx.lineTo(...to);
+      ctx.stroke();
+    }
+
+    socket.on('draw', data => {
+      drawLine(data.from, data.to, data.erase);
+    });
+
+    socket.on('clear', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    function setTool(t) {
+      tool = t;
+    }
+    function clearCanvas() {
+      socket.emit('clear'); // Apenas emite, o servidor agora cuida de limpar para todos
+    }
+
+
+
   </script>
 </body>
 </html>
