@@ -9,10 +9,7 @@ html, body {
   height: 100%;
   font-family: 'Segoe UI', sans-serif;
   background-color: #f5f5f5;
-  overflow: hidden; /* Impede scroll da página inteira */
-}
-
-body {
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -31,7 +28,51 @@ h2 {
   z-index: 10;
 }
 
-/* Área de mensagens rolável */
+/* Container do quadro branco */
+#whiteboard-container {
+  margin-top: 60px; /* espaço do cabeçalho */
+  padding: 10px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px; /* espaço entre o quadro branco e o chat */
+}
+
+/* Canvas do quadro branco */
+#whiteboard {
+  width: 100%;
+  height: 300px;
+  border: 2px solid #ccc;
+  background-color: white;
+  touch-action: none;
+}
+
+/* Botões de ferramentas abaixo do canvas */
+#tools {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#tools button {
+  padding: 8px 16px;
+  background-color: #4a76a8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#tools button:hover {
+  background-color: #3b5e8a;
+}
+
+/* Área de mensagens */
 #chat {
   flex: 1;
   overflow-y: auto;
@@ -40,7 +81,6 @@ h2 {
   flex-direction: column;
   gap: 10px;
   background-color: #e9ebee;
-  margin-top: 60px; /* espaço do header */
   margin-bottom: 70px; /* espaço do input */
 }
 
@@ -118,7 +158,11 @@ button:hover {
     padding: 12px;
   }
 
-  button {
-    width: auto;
+  #whiteboard {
+    height: 200px;
+  }
+
+  #tools {
+    justify-content: center;
   }
 }
