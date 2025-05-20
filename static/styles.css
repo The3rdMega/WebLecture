@@ -38,6 +38,7 @@ h2 {
   align-items: center;
   background-color: #ffffff;
   border-bottom: 1px solid #ccc;
+  margin-bottom: 10px; /* espaço entre o quadro branco e o chat */
 }
 
 /* Canvas do quadro branco */

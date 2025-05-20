@@ -4,10 +4,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <title>Chat Web</title>
+  <title>Web Lecture</title>
 </head>
 <body>
-  <h2>Chat Web</h2>
+  <h2>Web Lecture</h2>
   
   <!-- Quadro Branco -->
   <div id="whiteboardContainer">
@@ -15,7 +15,8 @@
     <div id="tools">
       <button onclick="setTool('draw')">Desenhar</button>
       <button onclick="setTool('erase')">Apagar</button>
-      <!--<button onclick="clearBoard()">Limpar Tudo</button>-->
+      <button onclick="clearCanvas()">Limpar Tudo</button>
+      <button onclick="saveImage()">Salvar imagem</button>
     </div>
   </div>
 
@@ -81,10 +82,15 @@
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
+      // Preenche fundo com branco após redimensionar
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.putImageData(imageData, 0, 0);
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     canvas.addEventListener('mousedown', e => {
       drawing = true;
@@ -104,7 +110,7 @@
 
     function drawLine(from, to, erase = false) {
       ctx.strokeStyle = erase ? 'white' : 'black';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = erase ? 10 : 2;
       ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(...from);
@@ -117,7 +123,8 @@
     });
 
     socket.on('clear', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
 
     function setTool(t) {
@@ -128,7 +135,13 @@
     }
 
 
-
+    function saveImage() {
+      const dataURL = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = 'whiteboard.png';
+      link.click();
+    }
   </script>
 </body>
 </html>
