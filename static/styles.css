@@ -166,3 +166,208 @@ button:hover {
     justify-content: center;
   }
 }
+#app-container {
+  display: flex;
+  height: calc(100% - 60px);
+  /* Ajustado para altura do cabeçalho */
+  margin-top: 60px;
+}
+
+#main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Para conter o chat e whiteboard */
+}
+
+#sidebar {
+  width: 250px;
+  min-width: 200px;
+  background-color: #f0f2f5;
+  padding: 15px;
+  border-left: 1px solid #ccc;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+#userList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+  flex-grow: 1;
+}
+
+#userList li {
+  padding: 8px 5px;
+  border-bottom: 1px solid #e7e7e7;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#userList li:last-child {
+  border-bottom: none;
+}
+
+.kick-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.kick-btn:hover {
+  background-color: #c82333;
+}
+
+#adminInfo {
+  font-size: 13px;
+  color: #555;
+  margin-top: auto;
+  /* Empurra para baixo se a lista de usuários for pequena */
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+#leaveRoomBtn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 20px;
+  vertical-align: middle;
+}
+
+#leaveRoomBtn:hover {
+  background-color: #5a6268;
+}
+
+/* Mensagens de sistema no chat */
+.message.system {
+  font-style: italic;
+  color: #555;
+  background-color: #f0f0f0;
+  align-self: center;
+  max-width: 90%;
+  text-align: center;
+  border: none;
+}
+
+.message.error {
+  font-style: italic;
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  align-self: center;
+  max-width: 90%;
+  text-align: center;
+}
+
+.message.warning {
+  font-style: italic;
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  align-self: center;
+  max-width: 90%;
+  text-align: center;
+}
+
+
+/* Ajustes para #whiteboardContainer e #chat para caberem com a sidebar */
+#whiteboard-container {
+  /* margin-top já existe, padding já existe */
+  /* flex-shrink já existe */
+  /* display flex etc. já existem */
+  /* background-color já existe */
+  /* border-bottom já existe */
+  /* margin-bottom já existe */
+  width: auto;
+  /* Deixa o flex container pai decidir */
+}
+
+#chat {
+  /* flex: 1; já existe */
+  /* overflow-y: auto; já existe */
+  /* padding: 10px; já existe */
+  /* display: flex; etc. já existe */
+  /* gap: 10px; já existe */
+  /* background-color já existe */
+  /* margin-bottom já existe */
+  width: auto;
+  /* Deixa o flex container pai decidir */
+}
+
+/* Responsividade para a sidebar */
+@media (max-width: 768px) {
+  #app-container {
+    flex-direction: column-reverse;
+    /* Sidebar em cima no mobile */
+    height: 100%;
+    /* Ocupar toda a altura da viewport */
+    margin-top: 0;
+    /* Remover margem do cabeçalho h2, pois ele será parte do scroll */
+  }
+
+  h2 {
+    /* Cabeçalho */
+    position: static;
+    /* Remove fixed position para scrollar com o conteúdo */
+    margin-bottom: 10px;
+  }
+
+  #main-content {
+    order: 2;
+    /* Conteúdo principal abaixo da sidebar */
+    height: auto;
+    /* Permitir que cresça conforme necessário */
+    overflow: visible;
+    /* Evitar scroll duplo */
+  }
+
+  #sidebar {
+    order: 1;
+    /* Sidebar acima do conteúdo principal */
+    width: 100%;
+    height: auto;
+    /* Altura baseada no conteúdo */
+    max-height: 40vh;
+    /* Limitar altura no mobile para não ocupar tudo */
+    border-left: none;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  #whiteboard-container {
+    margin-top: 10px;
+    /* Ajustar espaçamento sem cabeçalho fixo */
+  }
+
+  #chat {
+    height: 250px;
+    /* Altura fixa para chat no mobile, ou ajustar conforme preferência */
+    margin-bottom: 70px;
+    /* Espaço para inputArea */
+  }
+
+  #inputArea {
+    position: fixed;
+  }
+}

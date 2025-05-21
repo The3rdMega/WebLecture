@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Lecture - Lobby</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+        }
+
+        .lobby-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .lobby-container h1 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 1.8rem;
+        }
+
+        .lobby-container input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .lobby-container button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .create-room-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .create-room-btn:hover {
+            background-color: #45a049;
+        }
+
+        .join-room-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .join-room-btn:hover {
+            background-color: #0069d9;
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="lobby-container">
+        <h1>Bem-vindo ao Web Lecture</h1>
+        <input type="text" id="nickname" placeholder="Seu nome de exibição" required>
+
+        <button id="createRoomBtn" class="create-room-btn">Criar Nova Sala</button>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+        <input type="text" id="roomCode" placeholder="Código da Sala (ex: ABC123)">
+        <button id="joinRoomBtn" class="join-room-btn">Entrar na Sala</button>
+
+        <p id="error-message"></p>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='lobby.js') }}"></script>
+</body>
+
+</html>

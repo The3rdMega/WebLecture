@@ -1,147 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <title>Web Lecture</title>
+  <title>Web Lecture - Sala {{ room_code }}</title>
 </head>
+
 <body>
-  <h2>Web Lecture</h2>
-  
-  <!-- Quadro Branco -->
-  <div id="whiteboardContainer">
-    <canvas id="whiteboard"></canvas>
-    <div id="tools">
-      <button onclick="setTool('draw')">Desenhar</button>
-      <button onclick="setTool('erase')">Apagar</button>
-      <button onclick="clearCanvas()">Limpar Tudo</button>
-      <button onclick="saveImage()">Salvar imagem</button>
+  <div id="app-container">
+    <div id="main-content">
+      <h2>Web Lecture - Sala: <span id="roomCodeDisplay">{{ room_code }}</span>
+        <button id="leaveRoomBtn" title="Sair da Sala">Sair</button>
+      </h2>
+
+      <div id="whiteboardContainer">
+        <canvas id="whiteboard"></canvas>
+        <div id="tools">
+          <button onclick="setTool('draw')">Desenhar</button>
+          <button onclick="setTool('erase')">Apagar</button>
+          <button onclick="clearWhiteboard()">Limpar Tudo</button>
+          <button onclick="saveImage()">Salvar Imagem</button>
+        </div>
+      </div>
+
+      <div id="chat">
+        <!-- Mensagens serão adicionadas aqui -->
+      </div>
+
+      <div id="inputArea">
+        <input type="text" id="message" placeholder="Digite sua mensagem..." />
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
     </div>
-  </div>
 
-
-  <div id="chat"></div>
-  
-  <div id="inputArea">
-  <input type="text" id="message" placeholder="Digite sua mensagem..." />
-  <button onclick="sendMessage()">Enviar</button>
+    <div id="sidebar">
+      <h3>Participantes (<span id="userCount">0</span>)</h3>
+      <ul id="userList">
+        <!-- Usuários serão listados aqui -->
+      </ul>
+      <p id="adminInfo"></p>
+    </div>
   </div>
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
-    const socket = io();
-
-    socket.emit('request_history');
-
-    let nickname = prompt("Escolha um nome de exibição:");
-    socket.emit('set_nickname', nickname);
-
-    const chat = document.getElementById('chat');
-
-    socket.on('connect', () => {
-      console.log('Conectado ao servidor');
-    });
-
-    socket.on('message', msg => {
-      const div = document.createElement('div');
-      div.classList.add('message');
-
-      if (msg.startsWith(nickname + ":")) {
-        div.classList.add('you');
-      } else {
-        div.classList.add('other');
-      }
-
-      div.textContent = msg;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    });
-
-    function sendMessage() {
-      const input = document.getElementById('message');
-      const message = input.value;
-      if (message.trim()) {
-        socket.emit('chat_message', { nickname, message });
-        input.value = '';
-      }
-    }
-
-    document.getElementById('message').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    // Whiteboard
-    const canvas = document.getElementById('whiteboard');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-    let tool = 'draw';
-    let lastPos = null;
-
-    function resizeCanvas() {
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      // Preenche fundo com branco após redimensionar
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.putImageData(imageData, 0, 0);
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    canvas.addEventListener('mousedown', e => {
-      drawing = true;
-      lastPos = [e.offsetX, e.offsetY];
-    });
-    canvas.addEventListener('mouseup', () => {
-      drawing = false;
-      lastPos = null;
-    });
-    canvas.addEventListener('mousemove', e => {
-      if (!drawing) return;
-      const currentPos = [e.offsetX, e.offsetY];
-      drawLine(lastPos, currentPos, tool === 'erase');
-      socket.emit('draw', { from: lastPos, to: currentPos, erase: tool === 'erase' });
-      lastPos = currentPos;
-    });
-
-    function drawLine(from, to, erase = false) {
-      ctx.strokeStyle = erase ? 'white' : 'black';
-      ctx.lineWidth = erase ? 10 : 2;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(...from);
-      ctx.lineTo(...to);
-      ctx.stroke();
-    }
-
-    socket.on('draw', data => {
-      drawLine(data.from, data.to, data.erase);
-    });
-
-    socket.on('clear', () => {
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    });
-
-    function setTool(t) {
-      tool = t;
-    }
-    function clearCanvas() {
-      socket.emit('clear'); // Apenas emite, o servidor agora cuida de limpar para todos
-    }
-
-
-    function saveImage() {
-      const dataURL = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = dataURL;
-      link.download = 'whiteboard.png';
-      link.click();
-    }
+    // Passando dados do Flask para o JavaScript
+    const ROOM_CODE = "{{ room_code }}";
   </script>
+  <script src="{{ url_for('static', filename='room.js') }}"></script>
 </body>
+
 </html>
